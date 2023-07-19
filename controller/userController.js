@@ -5,6 +5,8 @@ const {
   UnauthenticatedError,
 } = require("../errors");
 const User = require("../models/User");
+const { createJWT, checkPermission } = require("../utils");
+const createTokenUser = require("../utils/createTokenUser");
 
 const getAllUsers = async (req, res) => {
   const allUsers = await User.find({ role: "user" }).select(
@@ -13,6 +15,8 @@ const getAllUsers = async (req, res) => {
   res.status(StatusCodes.OK).json({ allUsers });
 };
 const getSingleUser = async (req, res) => {
+  console.log(req.user, typeof req.params.id);
+  checkPermission(req.user, req.params.id);
   const user = await User.findOne({ _id: req.params.id }).select(
     "-password -_id -__v"
   );
@@ -24,7 +28,21 @@ const showCurrentUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: req.user });
 };
 const updateUser = async (req, res) => {
-  res.send("getAllUsers");
+  const { firstName, lastName } = req.body;
+  if (!firstName || !lastName)
+    throw new BadRequestError("Please provide firstName, lastName");
+
+  const user = await User.findOneAndUpdate(
+    { _id: req.user.id },
+    { firstName, lastName },
+    { new: true, runValidators: true }
+  );
+  if (!user) throw new NotFoundError("No user found");
+  const token = createJWT(createTokenUser(user));
+  console.log(token);
+  const { password, _id, __v, ...updatedUser } = user._doc;
+  updatedUser.token = token;
+  res.status(StatusCodes.OK).json({ updatedUser });
 };
 const updateUserPassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;

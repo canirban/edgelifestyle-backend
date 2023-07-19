@@ -1,7 +1,8 @@
 const createTokenUser = (user) => {
   return {
-    name: user.firstName.concat(" ", user.lastName),
-    email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
     role: user.role,
     id: user._id,
   };

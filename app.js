@@ -13,13 +13,17 @@ const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
 const authRoute = require("./routes/authRoutes");
 const userRoute = require("./routes/userRoutes");
-const { use } = require("./routes/authRoutes");
-
+const productRoute = require("./routes/productRoutes");
+const reviewRoute = require("./routes/reviewRoutes");
+const cartRoute = require("./routes/cartRoutes");
 app.use(morgan("tiny"));
 app.use(express.json());
 // app.use(cookieParser(process.env.JWT_SECRET));
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/users", userRoute);
+app.use("/api/v1/products", productRoute);
+app.use("/api/v1/reviews", reviewRoute);
+app.use("/api/v1/carts", cartRoute);
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 const start = async () => {

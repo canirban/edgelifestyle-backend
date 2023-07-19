@@ -10,8 +10,14 @@ const authenticateUser = async (req, res, next) => {
 
   const token = authorization.split(" ")[1];
   try {
-    const { name, email, role, id } = isJWTValid(token);
-    req.user = { name, email, role, id };
+    const { firstName, lastName, email, role, id } = isJWTValid(token);
+    req.user = {
+      firstName,
+      lastName,
+      email,
+      role,
+      id,
+    };
     next();
   } catch (err) {
     throw new UnauthenticatedError("Invalid Authentication");

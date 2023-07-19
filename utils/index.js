@@ -1,3 +1,3 @@
 const { createJWT, isJWTValid } = require("./jwt");
-
-module.exports = { createJWT, isJWTValid };
+const checkPermission = require("./checkPermissions");
+module.exports = { createJWT, isJWTValid, checkPermission, checkPermission };

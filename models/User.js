@@ -32,6 +32,16 @@ const UserSchema = new mongoose.Schema({
     enum: ["admin", "user"],
     default: "user",
   },
+  verificationToken: String,
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  verified: Date,
+  cartId: {
+    type: mongoose.Types.ObjectId,
+    ref: "Cart",
+  },
 });
 
 UserSchema.pre("save", async function () {
